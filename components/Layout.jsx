@@ -2,15 +2,10 @@ LayoutComp = React.createClass({
   render() {
     return (
       <div>
-        {this.props.content}
-        {this.renderFooter()}
+        <div className="main-container">
+          {this.props.content}
+        </div>
       </div>
     );
-  },
-
-  renderFooter() {
-    return (
-      <div></div>
-    )
   }
 });

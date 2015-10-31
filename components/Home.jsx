@@ -63,7 +63,7 @@ HomeComp = React.createClass({
 
   render() {
     return (
-      <div>
+      <div className="home">
         <h1>Create a room</h1>
         <input
           type="text"
@@ -76,7 +76,7 @@ HomeComp = React.createClass({
           Create Game
         </button>
 
-        <hr />
+        <div className="divider" />
 
         <h1>Join an existing room</h1>
         <input
@@ -84,14 +84,14 @@ HomeComp = React.createClass({
           value={this.state.username}
           onChange={this.updateUsername}
           placeholder="Username" />
-
+        <br />
         <input
           type="text"
           value={this.state.roomCode}
           onChange={this.updateRoomCode}
           maxLength={4}
           placeholder="Room Code" />
-
+        <br />
         <button
           onClick={this.onJoinGame}
           disabled={this.state.roomCode.length < 4 || this.state.username === ''}

@@ -1,1 +1,17 @@
-/* CSS declarations go here */
+@import url(https://fonts.googleapis.com/css?family=Oswald:400,300,700);
+
+*, body {
+  font-family: Oswald, Arial, sans-serif;
+  background-color: #a6d728;
+}
+
+/** HOME **/
+.home {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 450px;
+
+  text-align: center;
+}
