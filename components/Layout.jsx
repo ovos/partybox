@@ -10,9 +10,7 @@ LayoutComp = React.createClass({
 
   renderFooter() {
     return (
-      <div>
-        footer
-      </div>
+      <div></div>
     )
   }
 });
