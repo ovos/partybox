@@ -2,10 +2,17 @@ LayoutComp = React.createClass({
   render() {
     return (
       <div>
-        (INSERT A HEADER COMPONENT HERE)
         {this.props.content}
-        (INSERT SOME FOOTER HERE)
+        {this.renderFooter()}
       </div>
     );
+  },
+
+  renderFooter() {
+    return (
+      <div>
+        footer
+      </div>
+    )
   }
 });
