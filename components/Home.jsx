@@ -23,32 +23,48 @@ HomeComp = React.createClass({
     });
 
     var userId = this.createParticipant(lobbyId, true);
+    this.setPlayerSession(userId, lobbyId, roomCode);
 
     FlowRouter.go('/lobby/' + roomCode);
   },
 
   onJoinGame() {
-    Meteor.call(
-      'getLobbyForRoomCode',
-      this.state.roomCode,
-      (err, lobby) => {
-        if (err || !lobby) {
-          return;
-        }
+    var lobby = LobbyCollection.findOne({ roomCode: this.state.roomCode });
 
-        this.createParticipant(lobby._id, false, () => {
-          FlowRouter.go('/lobby/' + this.state.roomCode);
-        });
-      }
-    );
+    if (lobby) {
+      var userId = this.createParticipant(lobby._id, false);
+      this.setPlayerSession(userId, lobby._id, lobby.roomCode);
+
+      FlowRouter.go('/lobby/' + lobby.roomCode);
+    } else {
+      alert('No game found with this room code :(');
+      return null;
+    }
   },
 
-  createParticipant(lobbyId, isCreator = false, cb = false) {
-    var userId = ParticipantsCollection.insert({
-      name: this.state.username,
+  createParticipant(lobbyId, isCreator = false) {
+    var userId = false;
+    var existingUser = ParticipantsCollection.findOne({ name: this.state.username, lobbyId: lobbyId });
+
+    if (existingUser) {
+      userId = existingUser._id;
+    } else {
+      userId = ParticipantsCollection.insert({
+        name: this.state.username,
+        lobbyId: lobbyId,
+        isCreator: isCreator
+      });
+    }
+
+    return userId;
+  },
+
+  setPlayerSession(userId, lobbyId, roomCode) {
+    Session.set('playerData', {
+      userId: userId,
       lobbyId: lobbyId,
-      isCreator: isCreator
-    }, cb);
+      roomCode: roomCode
+    });
   },
 
   updateUsername(e) {

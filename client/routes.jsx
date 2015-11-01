@@ -13,3 +13,12 @@ FlowRouter.route("/lobby/:roomCode", {
     });
   }
 });
+
+/** ADMINISTRATIVE STUFF **/
+FlowRouter.route("/question-editor", {
+  action(params) {
+    ReactLayout.render(LayoutComp, {
+      content: <QuestionEditorComp />
+    });
+  }
+})

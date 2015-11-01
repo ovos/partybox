@@ -4,10 +4,11 @@ LobbyComp = React.createClass({
   getMeteorData() {
     var lobby = LobbyCollection.findOne({ roomCode: this.props.roomCode });
 
-    if (lobby) {
+    if (lobby && Session.get('playerData')) {
       return {
         participants: ParticipantsCollection.find({ lobbyId: lobby._id }).fetch(),
-        lobby: lobby
+        lobby: lobby,
+        playerData: Session.get('playerData')
       }
     } else {
       FlowRouter.go('/');
@@ -32,8 +33,16 @@ LobbyComp = React.createClass({
   },
 
   renderParticipant(participant, index) {
+    var className = participant._id === this.data.playerData.userId ?
+      'self' : 'opponent';
+
     return (
-      <li key={participant._id}>{participant.name} - {participant.isCreator.toString()}</li>
+      <li
+        key={participant._id}
+        className={className}
+      >
+        {participant.name} - {participant.isCreator.toString()}
+      </li>
     );
   }
 })
