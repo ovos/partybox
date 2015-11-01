@@ -5,6 +5,11 @@
   background-color: #a6d728;
 }
 
+.center {
+  text-align: center;
+  margin: 0 auto !important;
+}
+
 /** HOME **/
 .home {
   position: absolute;

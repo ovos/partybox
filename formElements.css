@@ -27,9 +27,23 @@ button {
 
 button:hover {
   cursor: pointer;
-  
+
   padding: 12px;
   border: 6px solid #fff;
 
   background-color: #3c83b9;
+}
+
+button.small {
+  display: inline-block;
+  margin: 4px;
+  padding: 4px;
+
+  font-size: 12px;
+  border: 1px solid transparent;
+}
+
+button.small:hover {
+  padding: 4px;
+  border: 1px solid #fff;
 }

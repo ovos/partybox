@@ -18,7 +18,7 @@ FlowRouter.route("/lobby/:roomCode", {
 FlowRouter.route("/question-editor", {
   action(params) {
     ReactLayout.render(LayoutComp, {
-      content: <QuestionEditorComp />
+      content: <QuestionsAdminComp />
     });
   }
 })
