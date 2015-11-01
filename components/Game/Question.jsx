@@ -2,12 +2,12 @@ GameQuestionComp = React.createClass({
   mixins: [ReactMeteorData],
 
   getMeteorData() {
-    var question = QuestionsCollection.find().fetch(); // todo: find current question
+    var question = QuestionsCollection.find().fetch(); // todo: find current
     var data = {};
 
     if(question.length) {
       data = {
-        question: question
+        question: question[0]
       }
     } else {
       FlowRouter.go('/');

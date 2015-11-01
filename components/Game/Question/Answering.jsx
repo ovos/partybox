@@ -19,16 +19,12 @@ GameQuestionAnsweringComp = React.createClass({
       submitting: true
     });
 
-    GamesCollection.update(game._id, {
-      '$push': {
-        'state.answers': answer
+    Meteor.call('game.addAnswer', { gameId: game._id, answer: answer },
+      (err, res) => {
+        if (err) { console.log(err); }
+        this.setState({ submitting: false });
       }
-    }, () => {
-      this.setState({
-        submitting: false
-      });
-    });
-
+    );
   },
 
   updateAnswer(e) {

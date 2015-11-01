@@ -1,12 +1,7 @@
 LobbyComp = React.createClass({
 
   startGame() {
-    GamesCollection.update(this.props.game._id, {
-      '$set': {
-        'state.type': GameStates.QUESTION_ANSWERING
-      }
-    });
-
+    Meteor.call('game.setQuestion', this.props.game._id);
   },
 
   render() {

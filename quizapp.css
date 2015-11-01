@@ -20,3 +20,8 @@
 
   text-align: center;
 }
+
+.participant.self {
+  font-weight: bold;
+  color: #990000;
+}

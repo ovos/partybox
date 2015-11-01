@@ -21,15 +21,21 @@ GameComp = React.createClass({
     } else {
       FlowRouter.go('/');
     }
+
     return data;
   },
 
   render() {
+    if (!this.data.game) return null;
+
     var game = this.data.game;
     switch(game.state.type) {
       case GameStates.QUESTION_ANSWERING:
       case GameStates.QUESTION_VOTING:
+        return <GameVotingComp game={game} currentUserId={this.data.playerData.userId} />
+        break;
       case GameStates.QUESTION_RESULTS:
+        console.log("IN");
         return <GameQuestionComp game={game} currentUserId={this.data.playerData.userId} />;
         break;
       case GameStates.FINAL_RESULTS:
@@ -40,7 +46,7 @@ GameComp = React.createClass({
         return <LobbyComp game={game} currentUserId={this.data.playerData.userId} participants={this.data.participants} />;
         break;
     }
-    
+
     return null;
   }
 

@@ -63,7 +63,7 @@ HomeComp = React.createClass({
   },
 
   setPlayerSession(userId, gameId, roomCode) {
-    Session.set('playerData', {
+    Session.setPersistent('playerData', {
       userId: userId,
       gameId: gameId,
       roomCode: roomCode
