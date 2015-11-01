@@ -10,48 +10,51 @@ HomeComp = React.createClass({
 
   getMeteorData() {
     return {
-      lobbies: LobbyCollection.find().fetch()
+      games: GamesCollection.find().fetch()
     };
   },
 
   onCreateGame() {
     var roomCode = Random.id(4).toUpperCase();
 
-    var lobbyId = LobbyCollection.insert({
+    var gameId = GamesCollection.insert({
       roomCode: roomCode,
-      createdAt: new Date()
+      createdAt: new Date(),
+      state: {
+        type: GameStates.WAITING_FOR_PLAYERS
+      }
     });
 
-    var userId = this.createParticipant(lobbyId, true);
-    this.setPlayerSession(userId, lobbyId, roomCode);
+    var userId = this.createParticipant(gameId, true);
+    this.setPlayerSession(userId, gameId, roomCode);
 
-    FlowRouter.go('/lobby/' + roomCode);
+    FlowRouter.go('/play/' + roomCode);
   },
 
   onJoinGame() {
-    var lobby = LobbyCollection.findOne({ roomCode: this.state.roomCode });
+    var game = GamesCollection.findOne({ roomCode: this.state.roomCode });
 
-    if (lobby) {
-      var userId = this.createParticipant(lobby._id, false);
-      this.setPlayerSession(userId, lobby._id, lobby.roomCode);
+    if (game) {
+      var userId = this.createParticipant(game._id, false);
+      this.setPlayerSession(userId, game._id, game.roomCode);
 
-      FlowRouter.go('/lobby/' + lobby.roomCode);
+      FlowRouter.go('/play/' + game.roomCode);
     } else {
       alert('No game found with this room code :(');
       return null;
     }
   },
 
-  createParticipant(lobbyId, isCreator = false) {
+  createParticipant(gameId, isCreator = false) {
     var userId = false;
-    var existingUser = ParticipantsCollection.findOne({ name: this.state.username, lobbyId: lobbyId });
+    var existingUser = ParticipantsCollection.findOne({ name: this.state.username, gameId: gameId });
 
     if (existingUser) {
       userId = existingUser._id;
     } else {
       userId = ParticipantsCollection.insert({
         name: this.state.username,
-        lobbyId: lobbyId,
+        gameId: gameId,
         isCreator: isCreator
       });
     }
@@ -59,10 +62,10 @@ HomeComp = React.createClass({
     return userId;
   },
 
-  setPlayerSession(userId, lobbyId, roomCode) {
+  setPlayerSession(userId, gameId, roomCode) {
     Session.set('playerData', {
       userId: userId,
-      lobbyId: lobbyId,
+      gameId: gameId,
       roomCode: roomCode
     });
   },

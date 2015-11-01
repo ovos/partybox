@@ -1,48 +1,48 @@
 LobbyComp = React.createClass({
-  mixins: [ReactMeteorData],
 
-  getMeteorData() {
-    var lobby = LobbyCollection.findOne({ roomCode: this.props.roomCode });
-
-    if (lobby && Session.get('playerData')) {
-      return {
-        participants: ParticipantsCollection.find({ lobbyId: lobby._id }).fetch(),
-        lobby: lobby,
-        playerData: Session.get('playerData')
+  startGame() {
+    GamesCollection.update(this.props.game._id, {
+      '$set': {
+        'state.type': GameStates.QUESTION_ANSWERING
       }
-    } else {
-      FlowRouter.go('/');
-    }
+    });
+
   },
 
   render() {
+    var currentParticipant = _.findWhere(this.props.participants, {
+      _id: this.props.currentUserId
+    });
     return (
       <div>
-        <h1>{this.data.lobby.roomCode}</h1>
-        {this.renderParticipants()}
+        <h1>Room Code: {this.props.game.roomCode}</h1>
+        <h3>Waiting for players...</h3>
+        <LobbyParticipants participants={this.props.participants} currentUserId={this.props.currentUserId} />
+        {this.renderStartButton()}
       </div>
     );
   },
 
-  renderParticipants() {
-    return (
-      <ul>
-        {this.data.participants.map(this.renderParticipant)}
-      </ul>
-    );
-  },
+  renderStartButton() {
+    if(!this.props.participants) return '';
 
-  renderParticipant(participant, index) {
-    var className = participant._id === this.data.playerData.userId ?
-      'self' : 'opponent';
+    var currentParticipant = _.findWhere(this.props.participants, {
+      _id: this.props.currentUserId
+    });
+
+    if(!currentParticipant) return '';
 
     return (
-      <li
-        key={participant._id}
-        className={className}
-      >
-        {participant.name} - {participant.isCreator.toString()}
-      </li>
-    );
+      <div>
+        <br />
+        <button
+          onClick={this.startGame}
+        >
+          Start Game
+        </button>
+      </div>
+
+    )
   }
+
 })

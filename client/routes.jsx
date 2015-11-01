@@ -6,13 +6,13 @@ FlowRouter.route("/", {
   }
 });
 
-FlowRouter.route("/lobby/:roomCode", {
-  action(params) {
+FlowRouter.route('/play/:roomCode', {
+  action(params) {
     ReactLayout.render(LayoutComp, {
-      content: <LobbyComp roomCode={params.roomCode} />
-    });
+      content: <GameComp roomCode={params.roomCode} />
+    })
   }
-});
+})
 
 /** ADMINISTRATIVE STUFF **/
 FlowRouter.route("/question-editor", {

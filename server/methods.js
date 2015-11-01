@@ -1,6 +1,5 @@
 Meteor.methods({
-  'getLobbyForRoomCode'(roomCode) {
-    console.log(roomCode);
-    return LobbyCollection.findOne({ roomCode: roomCode });
+  'getGameForRoomCode'(roomCode) {
+    return GamesCollection.findOne({ roomCode: roomCode });
   }
 });
