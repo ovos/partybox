@@ -1,4 +1,4 @@
-GameQuestionAnsweringComp = React.createClass({
+AnsweringComp = React.createClass({
   getInitialState() {
     return {
       answer: '',
@@ -7,22 +7,17 @@ GameQuestionAnsweringComp = React.createClass({
   },
 
   onCreateAnswer() {
-    var game = this.props.game,
-      question = this.props.question;
+    var { game, question, playerData }= this.props;
 
     var answer = {
-      userId: this.props.currentUserId,
+      userId: playerData.userId,
+      username: playerData.username,
       answer: this.state.answer
     };
-
-    this.setState({
-      submitting: true
-    });
 
     Meteor.call('game.addAnswer', { gameId: game._id, answer: answer },
       (err, res) => {
         if (err) { console.log(err); }
-        this.setState({ submitting: false });
       }
     );
   },
@@ -33,19 +28,19 @@ GameQuestionAnsweringComp = React.createClass({
 
   render() {
     var game = this.props.game;
-    var currentAnswer = _.findWhere(game.state.answers || [], {userId: this.props.currentUserId});
+    var currentAnswer = _.findWhere(game.state.answers || [], {userId: this.props.playerData.userId});
 
     return (
       <div>
         <h3>Add your answer for the following question:</h3>
-        <h2>{this.props.question.text}</h2>
+        <h2>{this.props.game.state.question.text}</h2>
           {currentAnswer
             ? (
               <div>
                 <div>Your answer:</div>
                 <div>{currentAnswer.answer}</div>
                 <br />
-                <div>Waiting for other players...</div>
+                <div>Waiting for other players <b>{game.state.answers.length + '/' + this.props.participants.length}</b>...</div>
               </div>
             )
             : (

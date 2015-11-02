@@ -8,3 +8,20 @@
 
   box-sizing: border-box;
 }
+
+.question-list-item {
+  font-family: Helvetica, Tahoma, Arial, sans-serif;
+  font-size: 16px;
+  margin: 12px 0;
+}
+
+.question-list-item:hover,
+.question-list-item.active {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.result b,
+.result span {
+  font-size: 20px !important;
+}

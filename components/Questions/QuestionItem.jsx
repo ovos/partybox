@@ -1,21 +1,17 @@
 QuestionItemComp = React.createClass({
-  getDefaultProps() {
-    return {
-      style: {}
-    };
-  },
-
   onQuestionClick(e) {
     this.props.onQuestionClick(e, this.props.question);
   },
 
   render() {
-    return (
-      <div style={this.getStyle()} onClick={this.onQuestionClick}>{this.props.question.text}</div>
-    );
-  },
+    var className = 'question-list-item';
 
-  getStyle() {
-    return {...this.props.style}
+    if (this.props.current === this.props.question._id) {
+      className += ' active';
+    }
+
+    return (
+      <div className={className} onClick={this.onQuestionClick}>{this.props.question.text}</div>
+    );
   }
 });

@@ -16,58 +16,50 @@ HomeComp = React.createClass({
 
   onCreateGame() {
     var roomCode = Random.id(4).toUpperCase();
-
-    var gameId = GamesCollection.insert({
+    var game = {
       roomCode: roomCode,
       createdAt: new Date(),
       state: {
         type: GameStates.WAITING_FOR_PLAYERS
       }
+    };
+
+    GamesCollection.insert(game, (err, id) => {
+      this.createParticipant(_.extend({}, game, {_id: id}));
     });
-
-    var userId = this.createParticipant(gameId, true);
-    this.setPlayerSession(userId, gameId, roomCode);
-
-    FlowRouter.go('/play/' + roomCode);
   },
 
   onJoinGame() {
     var game = GamesCollection.findOne({ roomCode: this.state.roomCode });
 
     if (game) {
-      var userId = this.createParticipant(game._id, false);
-      this.setPlayerSession(userId, game._id, game.roomCode);
-
-      FlowRouter.go('/play/' + game.roomCode);
+      this.createParticipant(game);
     } else {
       alert('No game found with this room code :(');
       return null;
     }
   },
 
-  createParticipant(gameId, isCreator = false) {
-    var userId = false;
-    var existingUser = ParticipantsCollection.findOne({ name: this.state.username, gameId: gameId });
-
-    if (existingUser) {
-      userId = existingUser._id;
-    } else {
-      userId = ParticipantsCollection.insert({
-        name: this.state.username,
-        gameId: gameId,
-        isCreator: isCreator
-      });
-    }
-
-    return userId;
+  createParticipant(game) {
+    Meteor.call(
+      'game.createParticipant',
+      this.state.username,
+      game,
+      (err, userId)  =>{
+        this.setPlayerAndGoToPlay(userId, game._id, game.roomCode);
+      }
+    );
   },
 
-  setPlayerSession(userId, gameId, roomCode) {
+  setPlayerAndGoToPlay(userId, gameId, roomCode) {
     Session.setPersistent('playerData', {
       userId: userId,
       gameId: gameId,
-      roomCode: roomCode
+      roomCode: roomCode,
+      username: this.state.username
     });
+
+    FlowRouter.go('/play');
   },
 
   updateUsername(e) {

@@ -8,6 +8,8 @@ QuestionsAdminComp = React.createClass({
   },
 
   getMeteorData() {
+    var handle = Meteor.subscribe('questions');
+
     var questions = QuestionsCollection.find().fetch();
 
     return {
@@ -26,7 +28,6 @@ QuestionsAdminComp = React.createClass({
   },
 
   onQuestionClick(e, question) {
-    console.log(question);
     this.setState({
       editAnswerId: question._id
     });
@@ -41,17 +42,17 @@ QuestionsAdminComp = React.createClass({
 
     return (
       <div>
-        Question Editor
+        <h2>Question Editor</h2>
 
         <div style={{width: '30%', float: 'left'}}>
           <button className="small center" onClick={this.createNewQuestion}>New question</button>
-          <QuestionListComp questions={this.data.questions} onQuestionClick={this.onQuestionClick} />
+          <QuestionListComp questions={this.data.questions} onQuestionClick={this.onQuestionClick} current={this.state.editAnswerId} />
         </div>
         <div style={{width: '70%', float: 'right'}}>
           {
             editQuestion ?
-            <QuestionEditorComp question={editQuestion}/> :
-              'select an answer on the left'
+            <QuestionEditorComp key={editQuestion._id} question={editQuestion}/> :
+              'Select a question on the left to edit/delete it.'
           }
         </div>
       </div>

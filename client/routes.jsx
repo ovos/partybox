@@ -6,10 +6,10 @@ FlowRouter.route("/", {
   }
 });
 
-FlowRouter.route('/play/:roomCode', {
+FlowRouter.route('/play', {
   action(params) {
     ReactLayout.render(LayoutComp, {
-      content: <GameComp roomCode={params.roomCode} />
+      content: <GameComp />
     })
   }
 })

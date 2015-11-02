@@ -2,48 +2,65 @@ GameComp = React.createClass({
   mixins: [ReactMeteorData],
 
   getMeteorData() {
-    var game = GamesCollection.findOne({ roomCode: this.props.roomCode });
-    var data = {};
+    var playerData = Session.get('playerData');
 
-    if (game) {
-      game.state = game.state || {};
-      if(!game.state.type) {
-        game.state.type = GameStates.WAITING_FOR_PLAYERS;
-      }
+    if (playerData) {
+      // subscribe to the game data and participants of this game
+      var handleGameData = Meteor.subscribe('gameData', playerData.gameId);
+      var handleParticipants = Meteor.subscribe('participants', playerData.gameId)
 
-      if (Session.get('playerData')) {
-        data = {
-          participants: ParticipantsCollection.find({ gameId: game._id }).fetch(),
-          game: game,
-          playerData: Session.get('playerData')
+      // when the inital snapshot of the game and participants is available we do sth
+      if ( handleGameData.ready() && handleParticipants.ready() ) {
+        var game = GamesCollection.findOne(playerData.gameId);
+        var participants = ParticipantsCollection.find({ gameId: playerData.gameId }).fetch();
+
+        if (game) {
+          return {
+            participants,
+            game,
+            playerData
+          };
         }
+      } else {
+        // the initial snapshot is not yet available, just return empty obj
+        return {};
       }
-    } else {
-      FlowRouter.go('/');
     }
 
-    return data;
+    // if there's no valid data, we redirect to home
+    FlowRouter.go('/');
+    return {};
   },
 
   render() {
     if (!this.data.game) return null;
 
-    var game = this.data.game;
+    return (
+      <div className="game-container">
+        {this.renderChild()}
+      </div>
+    );
+  },
+
+  renderChild() {
+    var { game, playerData, participants } = this.data;
+
     switch(game.state.type) {
       case GameStates.QUESTION_ANSWERING:
+        return <AnsweringComp game={game} playerData={playerData} participants={participants}/>;
+        break;
       case GameStates.QUESTION_VOTING:
-        return <GameVotingComp game={game} currentUserId={this.data.playerData.userId} />
+        return <VotingComp game={game} playerData={playerData} participants={participants}/>
         break;
       case GameStates.QUESTION_RESULTS:
-        console.log("IN");
-        return <GameQuestionComp game={game} currentUserId={this.data.playerData.userId} />;
+        return <ResultsComp game={game} playerData={playerData} participants={participants}/>
         break;
       case GameStates.FINAL_RESULTS:
-        //FlowRouter.go('/results/' + game.roomCode);
+        return <FinalResultsComp game={game} playerData={playerData} participants={participants}/>
         break;
       case GameStates.WAITING_FOR_PLAYERS:
       default:
-        return <LobbyComp game={game} currentUserId={this.data.playerData.userId} participants={this.data.participants} />;
+        return <LobbyComp game={game} playerData={playerData} participants={this.data.participants} />;
         break;
     }
 

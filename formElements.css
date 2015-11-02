@@ -25,6 +25,11 @@ button {
   transition: all 250ms ease;
 }
 
+button[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 button:hover {
   cursor: pointer;
 
@@ -46,4 +51,8 @@ button.small {
 button.small:hover {
   padding: 4px;
   border: 1px solid #fff;
+}
+
+button.red {
+  background-color: #dd0000;
 }

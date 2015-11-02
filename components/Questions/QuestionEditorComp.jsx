@@ -13,6 +13,10 @@ QuestionEditorComp = React.createClass({
     });
   },
 
+  deleteQuestion() {
+    QuestionsCollection.remove(this.props.question._id);
+  },
+
   updateQuestionText(e) {
     this.setState({
       questionText: e.target.value
@@ -24,6 +28,7 @@ QuestionEditorComp = React.createClass({
       <div>
         <input type="text" onChange={this.updateQuestionText} value={this.state.questionText} />
         <button onClick={this.saveQuestion}>Save!</button>
+        <button className="red" onClick={this.deleteQuestion}>Delete...</button>
       </div>
     )
   }

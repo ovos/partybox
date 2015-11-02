@@ -1,31 +1,31 @@
 LobbyComp = React.createClass({
-
   startGame() {
     Meteor.call('game.setQuestion', this.props.game._id);
   },
 
   render() {
     var currentParticipant = _.findWhere(this.props.participants, {
-      _id: this.props.currentUserId
+      _id: this.props.playerData.userId
     });
     return (
       <div>
         <h1>Room Code: {this.props.game.roomCode}</h1>
         <h3>Waiting for players...</h3>
-        <LobbyParticipants participants={this.props.participants} currentUserId={this.props.currentUserId} />
+        <LobbyParticipants
+          participants={this.props.participants} playerData={this.props.playerData}
+        />
         {this.renderStartButton()}
       </div>
     );
   },
 
   renderStartButton() {
-    if(!this.props.participants) return '';
-
     var currentParticipant = _.findWhere(this.props.participants, {
-      _id: this.props.currentUserId
+      _id: this.props.playerData.userId,
+      isCreator: true
     });
 
-    if(!currentParticipant) return '';
+    if(!currentParticipant || this.props.participants.length <= 1) return '';
 
     return (
       <div>
