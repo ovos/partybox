@@ -18,7 +18,7 @@ AnswerItemComp = React.createClass({
 
     return (
       <div className={className} onClick={this.onClick}>
-        {this.props.answer.answer} - {this.props.answer.username}
+        {this.props.answer.answer}
       </div>
     );
   }

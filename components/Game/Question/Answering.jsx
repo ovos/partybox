@@ -40,7 +40,9 @@ AnsweringComp = React.createClass({
                 <div>Your answer:</div>
                 <div>{currentAnswer.answer}</div>
                 <br />
-                <div>Waiting for other players <b>{game.state.answers.length + '/' + this.props.participants.length}</b>...</div>
+                <b>Waiting for other players {game.state.answers.length + '/' + this.props.participants.length}</b>
+                <br />
+                {this.renderWaiting()}
               </div>
             )
             : (
@@ -61,6 +63,47 @@ AnsweringComp = React.createClass({
               </div>
             )
           }
+      </div>
+    );
+  },
+
+  renderWaiting() {
+    var { game, participants } = this.props;
+
+    return (
+      <div>
+        {(() => {
+          var children = [];
+
+          children.push(game.state.answers.map(this.renderPlayerState));
+
+          children.push(participants.map( participant => {
+            console.log(_.findWhere(game.state.answers, { userId: participant._id }));
+            if (_.findWhere(game.state.answers, { userId: participant._id })) {
+              return null;
+            } else {
+              return this.renderPlayerWaiting(participant);
+            }
+          }));
+
+          return children;
+        })()}
+      </div>
+    );
+  },
+
+  renderPlayerState(answer) {
+    return (
+      <div key={answer.userId}>
+        <b>{answer.username}</b> ready!
+      </div>
+    );
+  },
+
+  renderPlayerWaiting(player) {
+    return (
+      <div key={player._id}>
+        <b>{player.name}</b> - WAITING FOR YOU!!
       </div>
     );
   }
