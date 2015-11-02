@@ -12,6 +12,7 @@ VotingComp = React.createClass({
     return (
       <div>
         <h1>Vote!</h1>
+        <p>{this.props.game.state.question.text}</p>
         {this.props.game.state.answers.map(this.renderAnswer)}
       </div>
     );
