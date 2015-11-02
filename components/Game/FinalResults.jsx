@@ -10,7 +10,7 @@ FinalResultsComp = React.createClass({
 
     _.each(history, function(question) {
       question.answers.map(function(answer) {
-        if (answer.votes) {
+        if (answer.votes && points[answer.userId]) {
           points[answer.userId].points += ( answer.votes.length * 100 );
         }
       });
