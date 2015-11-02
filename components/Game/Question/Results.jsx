@@ -22,7 +22,7 @@ ResultsComp = React.createClass({
   renderAnswerResult(answer) {
     return (
       <div key={answer.userId}>
-        <b>{answer.answer}</b> - by <i>{answer.username}</i> - <b>{answer.votes.length}</b> Votes!
+        <b>{answer.answer}</b> - by <i>{answer.username}</i> - <b>{answer.votes ? answer.votes.length : 0}</b> Votes!
       </div>
     );
   }
