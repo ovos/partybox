@@ -20,4 +20,5 @@ You can add questions by visiting /question-editor.
 Authors
 -----
 Patrick Neschkudla | flipace | http://neschkudla.at | https://twitter.com/flipace
+
 Maciej Holyszko | https://twitter.com/mholyszko
